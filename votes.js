@@ -180,7 +180,7 @@ async function renderPosts(v) {
   const box = el("div");
   v.append(box);
   box.append(el("p", { textContent: "loading..." }));
-  const posts = [];
+  s = [];
   try {
     (await FS.getDocs(FS.query(FS.collection(db, "posts"), FS.where("published", "==", true))))
       .forEach(d => posts.push({ id: d.id, ...d.data() }));
@@ -192,6 +192,7 @@ async function renderPosts(v) {
     const when = p.t ? new Date(p.t.seconds * 1000).toLocaleDateString() : "";
     box.append(el("div", { className: "post" }, [
       el("div", { className: "m", textContent: when }),
+      p.image ? el("img", { className: "pimg", src: p.image.startsWith("http") ? p.image : "posts/" + encodeURIComponent(p.image) }) : "",
       el("p", { className: "ptext", textContent: p.text }),
       voteBox("post_" + p.id, p.text.slice(0, 40))
     ]));
@@ -256,16 +257,17 @@ async function renderAdmin() {
   const pen = el("button", { textContent: "check comments" }); pen.onclick = () => loadPending(penBox);
   const ta = el("textarea", { rows: 3, placeholder: "write a post" });
   const post = el("button", { textContent: "post" }), pm = el("small");
+  const img = el("input", { placeholder: "image file name, e.g. photo.jpg (optional)" });
   post.onclick = async () => {
     const t = ta.value.trim(); if (!t) return;
     try {
-      await FS.addDoc(FS.collection(db, "posts"), { text: t.slice(0, 1000), published: true, t: FS.serverTimestamp() });
-      ta.value = ""; pm.textContent = " posted.";
+    await FS.addDoc(FS.collection(db, "posts"), { text: t.slice(0, 1000), image: img.value.trim(), published: true, t: FS.serverTimestamp() });
+    ta.value = ""; img.value = ""; pm.textContent = " posted.";
     } catch (e) { pm.textContent = " couldn't post."; console.warn(e); }
   };
   p.append(el("p", { textContent: "signed in. only you can see this panel." }), out,
     el("h3", { textContent: "stats" }), refresh, statsBox,
-    el("h3", { textContent: "new post" }), ta, post, pm,
+    el("h3", { textContent: "new post" }), ta, img, post, pm,
     el("h3", { textContent: "comments waiting" }), pen, penBox);
   loadStats(statsBox);
 }
