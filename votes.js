@@ -9,7 +9,7 @@ const CFG = {
   messagingSenderId: "738612057691",
   appId: "1:738612057691:web:28d338a1e10c451313917e"
 };
-const ADMIN_UID = "PASTE_ADMIN_UID_HERE";
+const ADMIN_UID = "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
 const V = "https://www.gstatic.com/firebasejs/10.12.2/";
 const TAB_OK = ["beats","loops","kits"];
 /* date each track was added, for "recent" sorting. key = tab:track name, value = YYYY-MM-DD */
