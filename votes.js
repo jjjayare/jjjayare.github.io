@@ -12,13 +12,48 @@ const CFG = {
 const ADMIN_UID = "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
 const V = "https://www.gstatic.com/firebasejs/10.12.2/";
 const TAB_OK = ["beats","loops","kits"];
+
 /* date each track was added, for "recent" sorting. key = tab:track name, value = YYYY-MM-DD */
 const ADDED = {
-  "beats:sega": "2026-10-20"
+  "beats:martian":"2026-10-18","beats:omega v2":"2026-10-15","beats:timewarp":"2026-10-20","beats:blikeme":"2026-09-27",
+  "beats:jhi":"2026-10-08","beats:knuckles":"2026-10-02","beats:lilyachty":"2026-09-17","beats:mexiko":"2026-09-19",
+  "beats:shot4me":"2026-10-06","beats:tung":"2026-10-04","beats:uspa":"2026-09-20","beats:yup v2":"2026-09-27",
+  "beats:crashaht":"2026-09-12","beats:olympics":"2026-09-13","beats:allcaps":"2026-08-24","beats:circus":"2026-08-13",
+  "beats:drac":"2026-08-07","beats:fashionkilla":"2026-08-20","beats:foreign":"2026-08-17","beats:freakoff":"2026-08-12",
+  "beats:macbook":"2026-08-06","beats:mileage":"2026-08-24","beats:monster":"2026-08-10","beats:overdrive":"2026-08-09",
+  "beats:range brothers":"2026-08-15","beats:rb1":"2026-08-08","beats:soho":"2026-08-19","beats:toystory":"2026-08-22",
+  "beats:trap":"2026-08-14","beats:uh huh honey":"2026-08-18","beats:zipper":"2026-08-15","beats:escape":"2026-07-18",
+  "beats:hustle":"2026-07-10","beats:illuminati":"2026-07-11","beats:kanyewest v2":"2026-07-02","beats:mcgrady":"2026-07-16",
+  "beats:mostwanted":"2026-07-18","beats:OCD":"2026-07-23","beats:robbery":"2026-07-16","beats:sega":"2026-07-19",
+  "beats:stripper":"2026-07-06","beats:top5top5":"2026-07-04","beats:cashregister":"2026-06-15","beats:feellikepierre":"2026-06-10",
+  "beats:function":"2026-06-12","beats:gospel":"2026-06-17","beats:horses":"2026-06-22","beats:kobe":"2026-06-22",
+  "beats:newschool":"2026-06-04","beats:packwatch":"2026-06-21","beats:tourlife":"2026-06-14","beats:trillionaire":"2026-06-27",
+  "beats:warrior":"2026-06-02","beats:yoshi":"2026-06-13","beats:atl v3":"2026-05-13","beats:chase v2":"2026-05-12",
+  "beats:cyberplug":"2026-05-12","beats:ducklife":"2026-05-26","beats:eight":"2026-05-12","beats:gothic piano":"2026-05-19",
+  "beats:hitec":"2026-05-26","beats:mansion":"2026-05-26","beats:mindright":"2026-05-24","beats:see me":"2026-05-27",
+  "beats:session":"2026-05-16","beats:sticks":"2026-05-29","beats:storm":"2026-05-17","beats:stuaddict":"2026-05-16",
+  "beats:takinswag":"2026-05-14","beats:underdog":"2026-05-05","beats:veteran":"2026-05-27","beats:astro":"2026-04-17",
+  "beats:blues":"2026-04-20","beats:crystal":"2026-04-22","beats:fat":"2026-04-29","beats:killers":"2026-04-11",
+  "beats:madonna v2":"2026-04-17","beats:misa no kodoku":"2026-04-19","beats:penguin bs":"2026-04-21","beats:shapes":"2026-04-25",
+  "beats:taiwan":"2026-04-04","beats:trophies":"2026-04-11","beats:impossible":"2026-03-27","beats:yellow":"2026-03-27",
+
+  "loops:sheild":"2026-09-24","loops:dark":"2026-08-26","loops:shoplifting":"2026-08-21","loops:zipper":"2026-08-15",
+  "loops:mostwanted":"2026-07-18","loops:cashregister":"2026-06-15","loops:feellikepierre":"2026-06-10","loops:kanyewest":"2026-06-23",
+  "loops:kobe":"2026-06-22","loops:starwars":"2026-06-22","loops:cyberplug":"2026-05-27","loops:google":"2026-05-29",
+  "loops:mansion":"2026-05-27","loops:mariogalaxy":"2026-05-27","loops:rude af":"2026-05-27","loops:veteran":"2026-05-27",
+  "loops:astro":"2026-04-17","loops:blues":"2026-04-20","loops:crystal":"2026-04-22","loops:killers":"2026-04-11",
+  "loops:misa no kodoku":"2026-04-19","loops:Motion":"2026-04-10","loops:trophies":"2026-04-11","loops:ptd":"2026-03-27",
+  "loops:wave":"2026-03-27","loops:car":"2026-03-27","loops:get down":"2026-03-27","loops:hdimuf":"2026-03-27",
+  "loops:hell na":"2026-03-27","loops:impossible":"2026-03-27","loops:island":"2026-03-27","loops:lava":"2026-03-31",
+  "loops:listen to me":"2026-03-27","loops:mean":"2026-03-27","loops:meditations":"2026-03-27","loops:Pizza":"2026-03-28",
+  "loops:steppin loop":"2026-03-27","loops:SWAG":"2026-03-27","loops:time":"2026-03-27","loops:yellow":"2026-03-27",
+  "loops:steppin loop 2":"2025-08-15","loops:ptd 2":"2025-08-17","loops:wave 2":"2025-08-17","loops:hell na 2":"2025-08-17",
+  "loops:listen to me 2":"2025-08-17"
 };
+
 let FS, AU, db, auth, uid, mine = {}, sortMode = "recent", adminOpen = false;
 const keyOf = it => (it.preview || "").replace(/[^A-Za-z0-9]+/g, "_");
-const isAdmin = () => !!auth && !!auth.currentUser && auth.currentUser.uid === "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
+const isAdmin = () => !!auth && !!auth.currentUser && auth.currentUser.uid === ADMIN_UID;
 
 try {
   const { initializeApp } = await import(V + "firebase-app.js");
@@ -67,16 +102,17 @@ async function loadMine() {
   } catch (e) { console.warn(e); }
 }
 
-/* like/dislike toggle. Counts are stored in items/{key} and only you can read them. */
+/* like/dislike toggle. Totals live in items/{key}, which only you can read. */
 async function vote(key, title, dir) {
   const vref = FS.doc(db, "votes", uid + "_" + key), iref = FS.doc(db, "items", key);
   return FS.runTransaction(db, async tx => {
-    const [vs, is] = await Promise.all([tx.get(vref), tx.get(iref)]);
+    const vs = await tx.get(vref);
     const old = vs.exists() ? vs.data().v : 0, nv = old === dir ? 0 : dir;
-    const cur = is.exists() ? is.data() : {};
-    const likes = (cur.likes || 0) + (nv === 1) - (old === 1);
-    const dislikes = (cur.dislikes || 0) + (nv === -1) - (old === -1);
-    tx.set(iref, { title, likes, dislikes }, { merge: true });
+    tx.set(iref, {
+      title,
+      likes: FS.increment((nv === 1) - (old === 1)),
+      dislikes: FS.increment((nv === -1) - (old === -1))
+    }, { merge: true });
     tx.set(vref, { uid, item: key, v: nv });
     return nv;
   });
