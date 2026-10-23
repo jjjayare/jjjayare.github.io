@@ -18,7 +18,7 @@ const ADDED = {
 };
 let FS, AU, db, auth, uid, mine = {}, sortMode = "recent", adminOpen = false;
 const keyOf = it => (it.preview || "").replace(/[^A-Za-z0-9]+/g, "_");
-const isAdmin = () => !!auth && !!auth.currentUser && auth.currentUser.uid === hASu4ZEGlEezXCfgVRnWEu1rmDp2;
+const isAdmin = () => !!auth && !!auth.currentUser && auth.currentUser.uid === "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
 
 try {
   const { initializeApp } = await import(V + "firebase-app.js");
