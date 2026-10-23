@@ -1,6 +1,6 @@
 /* votes.js - likes/dislikes, owner-only play and download stats, recent/a-z sorting,
    approved-only comments, a blog with images, and an admin track manager.
-   Type "ledger" on the page to open the owner panel. */
+   Owner panel: type "ledger" on a computer, or tap the "Jayare" title 5 times on a phone. */
 (async () => {
 const CFG = {
   apiKey: "AIzaSyCbTTkwh6BEBRAgNxZxcZ-QaRqtVBIZdeM",
@@ -108,7 +108,7 @@ async function loadMine() {
   } catch (e) { console.warn(e); }
 }
 
-/* tracks added through the admin panel. Read once at page load, so a new track appears after a reload. */
+/* tracks added through the admin panel. Read at page load, so a new track appears after a reload. */
 async function loadTracks() {
   TRACKS = [];
   try {
@@ -232,7 +232,7 @@ async function renderPosts(v) {
   });
 }
 
-/* ---------- owner panel (type "ledger" on the page) ---------- */
+/* ---------- owner panel ---------- */
 async function loadStats(box) {
   box.replaceChildren(el("p", { textContent: "loading..." }));
   const rows = [];
@@ -286,6 +286,7 @@ async function renderAdmin() {
   if (!p) { p = el("div", { id: "adm" }); document.querySelector("main").append(p); }
   p.hidden = !adminOpen;
   if (!adminOpen) return;
+  setTimeout(() => p.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   p.replaceChildren();
   if (!isAdmin()) {
     const em = el("input", { type: "email", placeholder: "email" }), pw = el("input", { type: "password", placeholder: "password" });
@@ -344,9 +345,16 @@ async function renderAdmin() {
   loadStats(statsBox);
   loadTrackList(trackBox);
 }
+
+/* computer: type "ledger" to open or close the owner panel */
 let abuf = "";
 document.addEventListener("keydown", e => {
-   /* mobile: tap the "Jayare" title 5 times quickly to open or close the owner panel */
+  if (e.target.matches && e.target.matches("input,textarea,select")) return;
+  abuf = (abuf + e.key).slice(-6).toLowerCase();
+  if (abuf === "ledger") { adminOpen = !adminOpen; renderAdmin(); }
+});
+
+/* phone: tap the "Jayare" title 5 times quickly to open or close the owner panel */
 let titleTaps = 0, titleTimer;
 document.querySelector("h1").addEventListener("click", () => {
   titleTaps++;
@@ -357,10 +365,6 @@ document.querySelector("h1").addEventListener("click", () => {
     adminOpen = !adminOpen;
     renderAdmin();
   }
-});
-  if (e.target.matches && e.target.matches("input,textarea,select")) return;
-  abuf = (abuf + e.key).slice(-6).toLowerCase();
-  if (abuf === "ledger") { adminOpen = !adminOpen; renderAdmin(); }
 });
 
 /* ---------- tabs, sorting ---------- */
