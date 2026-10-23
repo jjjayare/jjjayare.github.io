@@ -346,6 +346,18 @@ async function renderAdmin() {
 }
 let abuf = "";
 document.addEventListener("keydown", e => {
+   /* mobile: tap the "Jayare" title 5 times quickly to open or close the owner panel */
+let titleTaps = 0, titleTimer;
+document.querySelector("h1").addEventListener("click", () => {
+  titleTaps++;
+  clearTimeout(titleTimer);
+  titleTimer = setTimeout(() => titleTaps = 0, 2000);
+  if (titleTaps >= 5) {
+    titleTaps = 0;
+    adminOpen = !adminOpen;
+    renderAdmin();
+  }
+});
   if (e.target.matches && e.target.matches("input,textarea,select")) return;
   abuf = (abuf + e.key).slice(-6).toLowerCase();
   if (abuf === "ledger") { adminOpen = !adminOpen; renderAdmin(); }
