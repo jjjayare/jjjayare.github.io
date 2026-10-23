@@ -78,6 +78,7 @@ try {
 
 const st = document.createElement("style");
 st.textContent = `
+h1{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .row.v{grid-template-columns:auto auto 1fr auto}
 .vote{display:flex;gap:4px;align-items:center}
 .vote button{font:14px var(--f);background:var(--bg);border:1px solid var(--ink);padding:3px 8px;cursor:pointer;color:var(--ink)}
