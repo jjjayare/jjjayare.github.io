@@ -22,6 +22,9 @@ h1{font:600 44px/1 var(--f);letter-spacing:-1px;margin:.4em 0 .15em}
 nav{display:flex;margin:18px 0 0;flex-wrap:wrap}
 nav button{font:inherit;background:var(--bg);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
 nav button[aria-selected=true]{background:var(--paper);font-weight:600;position:relative;top:2px}
+nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto}
 section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--ink)}
 .row:last-child{border-bottom:0}
