@@ -20,7 +20,7 @@ const b = t => { const n = document.createElement("b"); n.textContent = t; retur
 const bar = document.createElement("div");
 bar.id = "igbar"; bar.setAttribute("role", "note");
 const msg = document.createElement("div");
-msg.append(b("downloads are blocked inside instagram. "), "tap ", b("\u2022\u2022\u2022"), " at the top right, then ", b("open in browser"), ".");
+msg.append(b("you can't download inside instagram. "), "open this page in an external browser (safari or chrome) to download. tap ", b("\u2022\u2022\u2022"), " at the top right, then ", b("open in browser"), ".");
 const copy = document.createElement("button"); copy.textContent = "copy link";
 const close = document.createElement("button"); close.textContent = "\u00D7"; close.setAttribute("aria-label", "close");
 const btns = document.createElement("div"); btns.className = "btns"; btns.append(copy, close);
