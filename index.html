@@ -19,12 +19,10 @@ h1{font:600 44px/1 var(--f);letter-spacing:-1px;margin:.4em 0 .15em}
 .strip{border:2px solid var(--ink);background:var(--paper);padding:4px 10px;font:16px/1.4 var(--f);min-height:34px}
 .cur{animation:b 1s steps(1) infinite} @keyframes b{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.cur{animation:none}}
-nav{display:flex;margin:18px 0 0;flex-wrap:wrap}
-nav button{font:inherit;background:var(--bg);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
-nav button[aria-selected=true]{background:var(--paper);font-weight:600;position:relative;top:2px}
-nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+nav{display:flex;margin:18px 0 0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
-nav button{flex:0 0 auto}
+nav button{flex:0 0 auto;font:inherit;background:var(--bg);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
+nav button[aria-selected=true]{background:var(--paper);font-weight:600;position:relative;top:2px}
 section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--ink)}
 .row:last-child{border-bottom:0}
@@ -40,9 +38,7 @@ footer{margin-top:14px;font:15px var(--f);display:flex;justify-content:space-bet
 #room{display:none;margin-top:10px;border:2px solid var(--red);background:var(--paper);color:var(--red);padding:10px;font:16px var(--f)}
 #room.on{display:block}
 </style>
-<script src="votes.js"></script>
 </head>
-<script src="votes.js"></script>
 <body>
 <main>
 <h1>Jayare</h1>
@@ -66,138 +62,138 @@ footer{margin-top:14px;font:15px var(--f);display:flex;justify-content:space-bet
    preview  = mp3 people hear   download = file or Drive link people get */
 const SONGS = {
   beats: [
-    ["allcaps",147,"allcaps 147 @jjjayare.mp3"],
-    ["astro",135,"astro 135 @jjjayare.mp3"],
-    ["atl v3",0,"atl v3 @jjjayare.mp3"],
+    ["martian",212,"martian 212 @jjjayare.mp3"],
+    ["omega v2",134,"omega v2 134 @jjjayare.mp3"],
+    ["timewarp",133,"timewarp 133 @jjjayare.mp3"],
     ["blikeme",133,"blikeme 133 @jjjayare.mp3"],
-    ["blues",135,"blues 135 @jjjayare.mp3"],
-    ["cashregister",135,"cashregister 135 @jjjayare mp3.mp3"],
-    ["chase v2",131,"chase v2 131 @jjjayare.mp3"],
-    ["circus",137,"circus 137 @jjjayare.mp3"],
+    ["jhi",135,"jhi 135 @jjjayare.mp3"],
+    ["knuckles",138,"knuckles 138 @jjjayare.mp3"],
+    ["lilyachty",151,"lilyachty 151 @jjjayare.mp3"],
+    ["mexiko",147,"mexiko 147 @jjjayare.mp3"],
+    ["shot4me",157,"shot4me 157 @jjjayare.mp3"],
+    ["tung",140,"tung 140 @jjjayare.mp3"],
+    ["uspa",145,"uspa 145 @jjjayare.mp3"],
+    ["yup v2",0,"yup v2 @jjjayare.mp3"],
     ["crashaht",144,"crashaht 144 @jjjayare.mp3"],
-    ["crystal",135,"crystal 135 @jjjayare.mp3"],
-    ["cyberplug",135,"cyberplug 135 @jjjayare.mp3"],
+    ["olympics",144,"olympics 144 @jjjayare @gatyurt.mp3"],
+    ["allcaps",147,"allcaps 147 @jjjayare.mp3"],
+    ["circus",137,"circus 137 @jjjayare.mp3"],
     ["drac",140,"drac 140 @jjjayare.mp3"],
-    ["ducklife",138,"ducklife 138 @jjjayare.mp3"],
-    ["eight",130,"eight 130 @jjjayare.mp3"],
-    ["escape",142,"escape 142 @jjjayare 2.mp3"],
     ["fashionkilla",140,"fashionkilla 140@jjjayare.mp3"],
-    ["fat",142,"fat 142 @jjjayare.mp3"],
-    ["feellikepierre",140,"feellikepierre 140 @jjjayare.mp3"],
     ["foreign",149,"foreign 149 @jjjayare.mp3"],
     ["freakoff",135,"freakoff 135 @jjjayare.mp3"],
-    ["function",134,"function 134 @jjjayare.mp3"],
-    ["gospel",138,"gospel 138 @jjjayare.mp3"],
-    ["gothic piano",133,"gothic piano 133 @jjjayare.mp3"],
-    ["hitec",200,"hitec 200 @jjjayare.mp3"],
-    ["horses",133,"horses 133 @jjjayare.mp3"],
-    ["hustle",133,"hustle 133 @jjjayare.mp3"],
-    ["illuminati",140,"illuminati 140 @jjjayare.mp3"],
-    ["impossible",135,"impossible 135 loop @jjjayare.mp3"],
-    ["jhi",135,"jhi 135 @jjjayare.mp3"],
-    ["kanyewest v2",146,"kanyewest v2 146 @jjjayare.mp3"],
-    ["killers",139,"killers 139 (E Iwato) @jjjayare.mp3"],   // hidden part of name guessed, check it
-    ["knuckles",138,"knuckles 138 @jjjayare.mp3"],
-    ["kobe",135,"kobe 135 @jjjayare.mp3"],
-    ["lilyachty",151,"lilyachty 151 @jjjayare.mp3"],
-    ["macbook",140,"macbook 140 @jjjayare @wake0.mp3"],        // hidden part of name guessed, check it
-    ["madonna v2",158,"madonna v2 158 @jjjayare.mp3"],
-    ["mansion",133,"mansion 133 @jjjayare.mp3"],
-    ["martian",212,"martian 212 @jjjayare.mp3"],
-    ["mcgrady",140,"mcgrady 140 @jjjayare.mp3"],
-    ["mexiko",147,"mexiko 147 @jjjayare.mp3"],
+    ["macbook",140,"macbook 140 @jjjayare @wake0.mp3"],
     ["mileage",149,"mileage 149@jjjayare.mp3"],
-    ["mindright",128,"mindright 128 @jjjayare.mp3"],
-    ["misa no kodoku",128,"misa no kodoku 128 @jjjayare.mp3"],
     ["monster",138,"monster 138 @jjjayare.mp3"],
-    ["mostwanted",140,"mostwanted 140 @jjjayare.mp3"],
-    ["newschool",140,"newschool 140 @jjjayare.mp3"],
-    ["OCD",141,"OCD 141 @jjjayare.mp3"],
-    ["olympics",144,"olympics 144 @jjjayare @gatyurt.mp3"],     // hidden part of name guessed, check it
-    ["omega v2",134,"omega v2 134 @jjjayare.mp3"],
     ["overdrive",140,"overdrive 140 @jjjayare.mp3"],
-    ["packwatch",137,"packwatch 137 @jjjayare.mp3"],
-    ["penguin bs",129,"penguin bs 129 @jjjayare.mp3"],
     ["range brothers",122,"range brothers 122 @jjjayare.mp3"],
     ["rb1",152,"rb1 152 @jjjayare.mp3"],
-    ["robbery",140,"robbery 140 @jjjayare.mp3"],
-    ["see me",135,"see me 135 @jjjayare.mp3"],
-    ["sega",143,"sega 143 @jjjayare.mp3"],
-    ["session",135,"session 135 @jjjayare.mp3"],
-    ["shapes",135,"shapes 135 @jjjayare.mp3"],
-    ["shot4me",157,"shot4me 157 @jjjayare.mp3"],
     ["soho",149,"soho 149 @jjjayare.mp3"],
-    ["sticks",140,"sticks 140 @jjjayare.mp3"],
-    ["storm",139,"storm 139 @jjjayare.mp3"],
-    ["stripper",140,"stripper 140 @jjjayare.mp3"],
-    ["stuaddict",142,"stuaddict 142 @jjjayare.mp3"],
-    ["taiwan",135,"taiwan 135 @jjjayare.mp3"],
-    ["takinswag",131,"takinswag 131 @jjjayare.mp3"],
-    ["timewarp",133,"timewarp 133 @jjjayare.mp3"],
-    ["top5top5",149,"top5top5 149 @jjjayare.mp3"],
-    ["tourlife",133,"tourlife 133 @jjjayare.mp3"],
     ["toystory",127,"toystory 127 @jjjayare.mp3"],
     ["trap",134,"trap 134 @jjjayare.mp3"],
-    ["trillionaire",140,"trillionaire 140 @jjjayare.mp3"],
-    ["trophies",133,"trophies 133 @jjjayare.mp3"],
-    ["tung",140,"tung 140 @jjjayare.mp3"],
     ["uh huh honey",150,"uh huh honey 150 @jjjayare.mp3"],
-    ["underdog",138,"underdog 138 @jjjayare.mp3"],
-    ["uspa",145,"uspa 145 @jjjayare.mp3"],
-    ["veteran",135,"veteran 135 @jjjayare.mp3"],
+    ["zipper",131,"zipper 131 @jjjayare .mp3"],
+    ["escape",142,"escape 142 @jjjayare 2.mp3"],
+    ["hustle",133,"hustle 133 @jjjayare.mp3"],
+    ["illuminati",140,"illuminati 140 @jjjayare.mp3"],
+    ["kanyewest v2",146,"kanyewest v2 146 @jjjayare.mp3"],
+    ["mcgrady",140,"mcgrady 140 @jjjayare.mp3"],
+    ["mostwanted",140,"mostwanted 140 @jjjayare.mp3"],
+    ["OCD",141,"OCD 141 @jjjayare.mp3"],
+    ["robbery",140,"robbery 140 @jjjayare.mp3"],
+    ["sega",143,"sega 143 @jjjayare.mp3"],
+    ["stripper",140,"stripper 140 @jjjayare.mp3"],
+    ["top5top5",149,"top5top5 149 @jjjayare.mp3"],
+    ["cashregister",135,"cashregister 135 @jjjayare mp3.mp3"],
+    ["feellikepierre",140,"feellikepierre 140 @jjjayare.mp3"],
+    ["function",134,"function 134 @jjjayare.mp3"],
+    ["gospel",138,"gospel 138 @jjjayare.mp3"],
+    ["horses",133,"horses 133 @jjjayare.mp3"],
+    ["kobe",135,"kobe 135 @jjjayare.mp3"],
+    ["newschool",140,"newschool 140 @jjjayare.mp3"],
+    ["packwatch",137,"packwatch 137 @jjjayare.mp3"],
+    ["tourlife",133,"tourlife 133 @jjjayare.mp3"],
+    ["trillionaire",140,"trillionaire 140 @jjjayare.mp3"],
     ["warrior",136,"warrior 136 @jjjayare.mp3"],
-    ["yellow",135,"yellow 135 @jjjayare.mp3"],
     ["yoshi",135,"yoshi 135 @jjjayare.mp3"],
-    ["yup v2",0,"yup v2 @jjjayare.mp3"],
-    ["zipper",131,"zipper 131 @jjjayare .mp3"]
+    ["atl v3",0,"atl v3 @jjjayare.mp3"],
+    ["chase v2",131,"chase v2 131 @jjjayare.mp3"],
+    ["cyberplug",135,"cyberplug 135 @jjjayare.mp3"],
+    ["ducklife",138,"ducklife 138 @jjjayare.mp3"],
+    ["eight",130,"eight 130 @jjjayare.mp3"],
+    ["gothic piano",133,"gothic piano 133 @jjjayare.mp3"],
+    ["hitec",200,"hitec 200 @jjjayare.mp3"],
+    ["mansion",133,"mansion 133 @jjjayare.mp3"],
+    ["mindright",128,"mindright 128 @jjjayare.mp3"],
+    ["see me",135,"see me 135 @jjjayare.mp3"],
+    ["session",135,"session 135 @jjjayare.mp3"],
+    ["sticks",140,"sticks 140 @jjjayare.mp3"],
+    ["storm",139,"storm 139 @jjjayare.mp3"],
+    ["stuaddict",142,"stuaddict 142 @jjjayare.mp3"],
+    ["takinswag",131,"takinswag 131 @jjjayare.mp3"],
+    ["underdog",138,"underdog 138 @jjjayare.mp3"],
+    ["veteran",135,"veteran 135 @jjjayare.mp3"],
+    ["astro",135,"astro 135 @jjjayare.mp3"],
+    ["blues",135,"blues 135 @jjjayare.mp3"],
+    ["crystal",135,"crystal 135 @jjjayare.mp3"],
+    ["fat",142,"fat 142 @jjjayare.mp3"],
+    ["killers",139,"killers 139 (E Iwato) @jjjayare (loop).mp3"],
+    ["madonna v2",158,"madonna v2 158 @jjjayare.mp3"],
+    ["misa no kodoku",128,"misa no kodoku 128 @jjjayare.mp3"],
+    ["penguin bs",129,"penguin bs 129 @jjjayare.mp3"],
+    ["shapes",135,"shapes 135 @jjjayare.mp3"],
+    ["taiwan",135,"taiwan 135 @jjjayare.mp3"],
+    ["trophies",133,"trophies 133 @jjjayare.mp3"],
+    ["impossible",135,"impossible 135 loop @jjjayare.mp3"],
+    ["yellow",135,"yellow 135 @jjjayare.mp3"]
   ],
   loops: [
-    ["kanyewest",146,"kanyewest 146 @jjjayare (loop).mp3"],   // hidden part of name guessed, check it
-    ["mostwanted",140,"mostwanted 140 @jjjayare loop.mp3"],
     ["sheild",152,"sheild 152 @jjjayare loop.mp3"],
+    ["dark",139,"dark 139 @jjjayare.mp3"],
     ["shoplifting",140,"shoplifting 140 @jjjayare loop.mp3"],
-    ["zipper",131,"zipper 131 @jjjayare (loop).mp3"],          // hidden part of name guessed, check it
+    ["zipper",131,"zipper 131 @jjjayare (loop).mp3"],
+    ["mostwanted",140,"mostwanted 140 @jjjayare loop.mp3"],
+    ["cashregister",135,"cashregister 135 @jjjayare (loop).mp3"],
+    ["feellikepierre",140,"feellikepierre 140 @jjjayare (loop).mp3"],
+    ["kanyewest",146,"kanyewest 146 @jjjayare (loop).mp3"],
+    ["kobe",140,"kobe 140 @jjjayare loop.mp3"],
+    ["starwars",140,"starwars 140 @jjjayare loop.mp3"],
+    ["cyberplug",135,"cyberplug 135 @jjjayare (Loop).mp3"],
+    ["google",135,"google 135 @jjjayare (Loop).mp3"],
+    ["mansion",133,"mansion 133 @jjjayare (Loop).mp3"],
+    ["mariogalaxy",135,"mariogalaxy 135 @jjjayare (Loop).mp3"],
+    ["rude af",130,"rude af 130 @jjjayare (Loop).mp3"],
+    ["veteran",135,"veteran 135 @jjjayare (Loop).mp3"],
+    ["astro",135,"astro 135 @jjjayare (loop).mp3"],
+    ["blues",135,"blues 135 @jjjayare loop.mp3"],
+    ["crystal",135,"crystal 135 @jjjayare (Loop).mp3"],
+    ["killers",139,"killers 139 (E Iwato) @jjjayare (loop).mp3"],
+    ["misa no kodoku",128,"misa no kodoku 128 @jjjayare (Loop).mp3"],
+    ["Motion",135,"Motion 135 A# Min @jjjayare (loop).mp3"],
+    ["trophies",133,"trophies 133 @jjjayare (loop).mp3"],
     ["ptd",132,"132 jayare loop ptd.mp3"],
     ["wave",176,"176 wave jayare loop.mp3"],
-    ["astro",135,"astro 135 @jjjayare loop.mp3"],
-    ["blues",135,"blues 135 @jjjayare loop.mp3"],
     ["car",140,"car 140 jayare loop.mp3"],
-    ["cashregister",135,"cashregister 135 @jjjayare loop.mp3"],
-    ["crystal",135,"crystal 135 @jjjayare loop.mp3"],
-    ["cyberplug",135,"cyberplug 135 @jjjayare loop.mp3"],
-    ["feellikepierre",140,"feellikepierre 140 @jjjayare loop.mp3"],
     ["get down",205,"get down 205 jayare loop.mp3"],
-    ["google",135,"google 135 @jjjayare loop.mp3"],
     ["hdimuf",140,"hdimuf 140 jayare loop.mp3"],
     ["hell na",144,"hell na 144 jayare loop.mp3"],
     ["impossible",135,"impossible 135 loop @jjjayare.mp3"],
     ["island",134,"island 134 loop @jjjayare.mp3"],
-    ["killers",139,"killers 139 (E Iwato) @jjjayare (loop).mp3"], // hidden part of name guessed, check it
-    ["kobe",140,"kobe 140 @jjjayare loop.mp3"],
-    ["lava",135,"lava 135 C iwato @jjjayare (Loop).mp3"],          // hidden part of name guessed, check it
+    ["lava",135,"lava 135 C iwato @jjjayare (Loop).mp3"],
     ["listen to me",152,"listen to me 152 jayare loop.mp3"],
-    ["mansion",133,"mansion 133 @jjjayare loop.mp3"],
-    ["mariogalaxy",135,"mariogalaxy 135 @jjjayare loop.mp3"],
     ["mean",101,"mean 101 jayare loop.mp3"],
     ["meditations",140,"meditations 140 jayare loop.mp3"],
-    ["misa no kodoku",128,"misa no kodoku 128 @jjjayare loop.mp3"],
-    ["Motion",135,"Motion 135 A# Min @jjjayare loop.mp3"],
-    ["Pizza",135,"Pizza 135 @jjjayare loop.mp3"],
-    ["rude af",130,"rude af 130 @jjjayare loop.mp3"],
-    ["starwars",140,"starwars 140 @jjjayare loop.mp3"],
+    ["Pizza",135,"Pizza 135 @jjjayare (Loop).mp3"],
     ["steppin loop",140,"steppin loop 140 bpm jayare.mp3"],
     ["SWAG",156,"SWAG 156 jayare loop.mp3"],
     ["time",130,"time 130 jayare loop.mp3"],
-    ["trophies",133,"trophies 133 @jjjayare loop.mp3"],
-    ["veteran",135,"veteran 135 @jjjayare loop.mp3"],
     ["yellow",135,"yellow 135 loop @jjjayare.mp3"],
-    ["listen to me 2",152,"listen to me 152 jayare loop 2.mp3"],
+    ["d# minor",180,"@prod.jayare d# minor 180 bpm loop.mp3"],
+    ["ptd 2",132,"132 jayare loop ptd 2.mp3"],
     ["wave 2",176,"176 wave jayare loop 2.mp3"],
     ["hell na 2",144,"hell na 144 jayare loop 2.mp3"],
-    ["dark",139,"dark 139 @jjjayare.mp3"],
-    ["steppin loop 2",140,"steppin loop 140 bpm jayare 2.mp3"],
-    ["ptd 2",132,"132 jayare loop ptd 2.mp3"]
-    // "@prod.jayare d# minor 18..." left out: its name and bpm are cut off in the screenshot
+    ["listen to me 2",152,"listen to me 152 jayare loop 2.mp3"],
+    ["steppin loop 2",140,"steppin loop 140 bpm jayare 2.mp3"]
   ]
 };
 const KITS = [
@@ -332,7 +328,7 @@ function found(){
   if(unlocked || !sf) return; unlocked = true;
   const r = $("room"), p = "secret/"+encodeURIComponent(sf);
   r.replaceChildren(el("p",{textContent:"you stayed. two people, one room, one take."}),
-    row({title:"belly",meta:"",preview:p,download:p},"secret/ belly prod @jjjayare.mp3"));
+    row({title:"belly",meta:"",preview:p,download:p},"secret"));
   r.classList.add("on"); r.scrollIntoView({behavior:"smooth"});
 }
 let buf = "", taps = 0, tapT;
@@ -344,5 +340,6 @@ $("visits").onclick = () => {
 
 show(location.hash.slice(1));
 </script>
+<script src="votes.js"></script>
 </body>
 </html>
