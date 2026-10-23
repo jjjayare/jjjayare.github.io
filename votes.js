@@ -1,5 +1,6 @@
 /* votes.js - likes/dislikes, owner-only play and download stats, recent/a-z sorting,
-   approved-only comments, and a blog section with images. Type "ledger" on the page to open the owner panel. */
+   approved-only comments, a blog with images, and an admin track manager.
+   Type "ledger" on the page to open the owner panel. */
 (async () => {
 const CFG = {
   apiKey: "AIzaSyCbTTkwh6BEBRAgNxZxcZ-QaRqtVBIZdeM",
@@ -13,7 +14,8 @@ const ADMIN_UID = "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
 const V = "https://www.gstatic.com/firebasejs/10.12.2/";
 const TAB_OK = ["beats","loops","kits"];
 
-/* date each track was added, for "recent" sorting. key = tab:track name, value = YYYY-MM-DD */
+/* dates for the original tracks, for "recent" sorting. key = tab:track name, value = YYYY-MM-DD.
+   Tracks added through the admin panel get their date automatically. */
 const ADDED = {
   "beats:martian":"2026-10-18","beats:omega v2":"2026-10-15","beats:timewarp":"2026-10-20","beats:blikeme":"2026-09-27",
   "beats:jhi":"2026-10-08","beats:knuckles":"2026-10-02","beats:lilyachty":"2026-09-17","beats:mexiko":"2026-09-19",
@@ -51,9 +53,11 @@ const ADDED = {
   "loops:listen to me 2":"2025-08-17"
 };
 
-let FS, AU, db, auth, uid, mine = {}, sortMode = "recent", adminOpen = false;
+let FS, AU, db, auth, uid, mine = {}, sortMode = "recent", adminOpen = false, TRACKS = [];
 const keyOf = it => (it.preview || "").replace(/[^A-Za-z0-9]+/g, "_");
 const isAdmin = () => !!auth && !!auth.currentUser && auth.currentUser.uid === ADMIN_UID;
+/* true if a track is already listed in SONGS in index.html */
+const inSongs = (tab, file) => typeof SONGS !== "undefined" && !!SONGS[tab] && SONGS[tab].some(s => s[2] === file);
 
 try {
   const { initializeApp } = await import(V + "firebase-app.js");
@@ -64,6 +68,7 @@ try {
   auth = AU.getAuth(app);
   uid = (await AU.signInAnonymously(auth)).user.uid;
   await loadMine();
+  await loadTracks();
   AU.onAuthStateChanged(auth, async u => {
     if (!u) { uid = (await AU.signInAnonymously(auth)).user.uid; await loadMine(); }
     else if (u.uid !== uid) { uid = u.uid; await loadMine(); }
@@ -89,7 +94,7 @@ st.textContent = `
 .ptext{white-space:pre-wrap;margin:6px 0 8px}
 .pimg{max-width:100%;height:auto;display:block;margin:6px 0}
 #adm{margin-top:14px;border:2px solid var(--ink);background:var(--paper);padding:12px;font:15px var(--f)}
-#adm input,#adm textarea{display:block;width:100%;font:15px var(--f);margin:0 0 6px;border:1px solid var(--ink);padding:5px}
+#adm input,#adm textarea,#adm select{display:block;width:100%;font:15px var(--f);margin:0 0 6px;border:1px solid var(--ink);padding:5px}
 #adm button{font:15px var(--f);padding:4px 12px;margin:4px 6px 4px 0;cursor:pointer}
 #adm table{width:100%;border-collapse:collapse;margin:8px 0}
 #adm td,#adm th{border-bottom:1px dashed var(--ink);text-align:left;padding:3px 4px}`;
@@ -101,6 +106,14 @@ async function loadMine() {
     (await FS.getDocs(FS.query(FS.collection(db, "votes"), FS.where("uid", "==", uid))))
       .forEach(d => mine[d.data().item] = d.data().v);
   } catch (e) { console.warn(e); }
+}
+
+/* tracks added through the admin panel. Read once at page load, so a new track appears after a reload. */
+async function loadTracks() {
+  TRACKS = [];
+  try {
+    (await FS.getDocs(FS.collection(db, "tracks"))).forEach(d => TRACKS.push({ id: d.id, ...d.data() }));
+  } catch (e) { console.warn("tracks:", e); }
 }
 
 /* like/dislike toggle. Totals live in items/{key}, which only you can read. */
@@ -254,6 +267,20 @@ async function loadPending(box) {
     box.append(el("p", {}, [el("b", { textContent: c.name + " on " + c.item + ": " }), c.text]), ok, no);
   });
 }
+async function loadTrackList(box) {
+  box.replaceChildren(el("p", { textContent: "loading..." }));
+  const list = [];
+  try {
+    (await FS.getDocs(FS.collection(db, "tracks"))).forEach(d => list.push({ id: d.id, ...d.data() }));
+  } catch (e) { box.replaceChildren(el("p", { textContent: "couldn't load tracks." })); return; }
+  box.replaceChildren();
+  if (!list.length) box.append(el("p", { textContent: "no added tracks yet." }));
+  list.forEach(t => {
+    const del = el("button", { textContent: "remove" });
+    del.onclick = async () => { await FS.deleteDoc(FS.doc(db, "tracks", t.id)); loadTrackList(box); };
+    box.append(el("p", {}, [el("b", { textContent: t.folder + ": " }), (t.title || "") + (t.bpm ? " (" + t.bpm + " bpm)" : "") + " ", del]));
+  });
+}
 async function renderAdmin() {
   let p = document.getElementById("adm");
   if (!p) { p = el("div", { id: "adm" }); document.querySelector("main").append(p); }
@@ -272,9 +299,30 @@ async function renderAdmin() {
   }
   const out = el("button", { textContent: "sign out" });
   out.onclick = () => AU.signOut(auth);
-  const statsBox = el("div"), penBox = el("div");
+  const statsBox = el("div"), penBox = el("div"), trackBox = el("div");
+
   const refresh = el("button", { textContent: "refresh stats" }); refresh.onclick = () => loadStats(statsBox);
   const pen = el("button", { textContent: "check comments" }); pen.onclick = () => loadPending(penBox);
+
+  const folderIn = el("select", {}, ["beats","loops","kits"].map(f => el("option", { value: f, textContent: f })));
+  const fileIn = el("input", { placeholder: "paste the file name, e.g. newtrack 140 @jjjayare.mp3" });
+  const addTrack = el("button", { textContent: "add track" }), tm = el("small");
+  addTrack.onclick = async () => {
+    const file = fileIn.value.trim(); if (!file) return;
+    const parsed = typeof parse === "function" ? parse(file) : { title: file.replace(/\.[^.]+$/, ""), meta: "" };
+    try {
+      await FS.addDoc(FS.collection(db, "tracks"), {
+        folder: folderIn.value,
+        file,
+        title: parsed.title,
+        bpm: (parsed.meta || "").replace(/ bpm$/, ""),
+        added: new Date().toISOString().slice(0, 10)
+      });
+      fileIn.value = ""; tm.textContent = " added. reload the site to see it.";
+      loadTrackList(trackBox);
+    } catch (e) { tm.textContent = " couldn't add. check the console."; console.warn(e); }
+  };
+
   const ta = el("textarea", { rows: 3, placeholder: "write a post" });
   const img = el("input", { placeholder: "image file name, e.g. photo.jpg (optional)" });
   const post = el("button", { textContent: "post" }), pm = el("small");
@@ -285,15 +333,20 @@ async function renderAdmin() {
       ta.value = ""; img.value = ""; pm.textContent = " posted.";
     } catch (e) { pm.textContent = " couldn't post."; console.warn(e); }
   };
+
   p.append(el("p", { textContent: "signed in. only you can see this panel." }), out,
+    el("h3", { textContent: "add a track" }),
+    el("small", { textContent: "1. put the mp3 in the repo folder with GitHub Desktop and push it first. 2. paste the file name here." }),
+    folderIn, fileIn, addTrack, tm, trackBox,
     el("h3", { textContent: "stats" }), refresh, statsBox,
     el("h3", { textContent: "new post" }), ta, img, post, pm,
     el("h3", { textContent: "comments waiting" }), pen, penBox);
   loadStats(statsBox);
+  loadTrackList(trackBox);
 }
 let abuf = "";
 document.addEventListener("keydown", e => {
-  if (e.target.matches && e.target.matches("input,textarea")) return;
+  if (e.target.matches && e.target.matches("input,textarea,select")) return;
   abuf = (abuf + e.key).slice(-6).toLowerCase();
   if (abuf === "ledger") { adminOpen = !adminOpen; renderAdmin(); }
 });
@@ -309,6 +362,16 @@ window.show = function (tab) {
     return;
   }
   if (!TAB_OK.includes(tab)) return;
+
+  /* add tracks from the admin panel that aren't already in SONGS */
+  const note = v.querySelector(":scope > .note");
+  TRACKS.filter(t => t.folder === tab && !inSongs(tab, t.file)).forEach(t => {
+    const p = tab + "/" + encodeURIComponent(t.file);
+    const r = window.row({ title: t.title, meta: t.bpm ? t.bpm + " bpm" : "", preview: p, download: p }, tab);
+    r.dataset.added = t.added || "";
+    v.insertBefore(r, note);
+  });
+
   const bar = el("div", { className: "sortbar" }, ["sort:"]);
   ["recent", "a-z"].forEach(m => {
     const b = el("button", { textContent: m }); b.setAttribute("aria-pressed", sortMode === m);
@@ -319,7 +382,6 @@ window.show = function (tab) {
   rows.sort((a, b) => sortMode === "a-z"
     ? a.querySelector(".t").textContent.localeCompare(b.querySelector(".t").textContent, undefined, { sensitivity: "base" })
     : (b.dataset.added || "").localeCompare(a.dataset.added || "") || idx.get(a) - idx.get(b));
-  const note = v.querySelector(":scope > .note");
   rows.forEach(r => v.insertBefore(r, note));
 };
 window.show(location.hash.slice(1));
