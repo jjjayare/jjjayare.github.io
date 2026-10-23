@@ -87,6 +87,7 @@ st.textContent = `
 .sortbar button[aria-pressed=true]{color:var(--ink);text-decoration:none;font-weight:600}
 .post{border:2px solid var(--ink);background:#fff;padding:10px;margin-bottom:12px}
 .ptext{white-space:pre-wrap;margin:6px 0 8px}
+.pimg{max-width:100%;height:auto;display:block;margin:6px 0}
 #adm{margin-top:14px;border:2px solid var(--ink);background:var(--paper);padding:12px;font:15px var(--f)}
 #adm input,#adm textarea{display:block;width:100%;font:15px var(--f);margin:0 0 6px;border:1px solid var(--ink);padding:5px}
 #adm button{font:15px var(--f);padding:4px 12px;margin:4px 6px 4px 0;cursor:pointer}
