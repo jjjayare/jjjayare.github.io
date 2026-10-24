@@ -36,7 +36,11 @@ h1{font:600 44px/1 var(--f);letter-spacing:-1px;color:var(--paper);margin:.4em 0
 @media (prefers-reduced-motion:reduce){.cur{animation:none}}
 nav{display:flex;margin:18px 0 0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
-nav button{flex:0 0 auto;font:inherit;text-transform:lowercase;background:var(--bg-deep);color:var(--paper);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
+nav button{flex:1 1 auto;font:inherit;text-transform:lowercase;background:var(--bg-deep);color:var(--paper);border:2px solid var(--ink);border-bottom:0;padding:4px 10px;cursor:pointer;margin-right:-2px;white-space:nowrap}
+@media (max-width:480px){
+  nav button{font-size:15px;padding:4px 6px}
+  nav{overflow-x:visible}
+}
 nav button[aria-selected=true]{background:var(--paper);color:var(--ink);font-weight:600;position:relative;top:2px}
 section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px;box-shadow:0 0 0 4px var(--paper),0 0 0 6px var(--ink)}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--ink)}
