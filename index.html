@@ -8,35 +8,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
 <style>
-:root{--bg:#cfd3c4;--paper:#e6e8dc;--ink:#15151a;--link:#1a2bcc;--seen:#6b1f8f;--red:#a4161a;
---f:"IBM Plex Sans Condensed","Arial Narrow","Avenir Next Condensed","Roboto Condensed",sans-serif}
+:root{
+  --bg:#4a63d8;        /* the blue behind the 47 */
+  --bg-deep:#2f47b8;   /* darker blue for inactive tabs */
+  --paper:#f2ecd2;     /* cream from the geometry lines */
+  --ink:#0d1333;       /* near-black navy for text and outlines */
+  --link:#1c2fa0;
+  --seen:#4b2a86;
+  --gold:#e3b341;      /* highlight for focus and pressed states */
+  --red:#e3b341;
+  --f:"IBM Plex Sans Condensed","Arial Narrow","Avenir Next Condensed","Roboto Condensed",sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 var(--f)}
+html{background:var(--bg)}
+body{margin:0;color:var(--ink);font:18px/1.45 var(--f);background-color:var(--bg);
+  background-image:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 79px, rgba(255,246,210,.16) 80px 81px),
+    repeating-radial-gradient(circle at 0% 100%, transparent 0 119px, rgba(255,246,210,.10) 120px 121px);
+  background-attachment:fixed}
 main{max-width:720px;margin:0 auto;padding:14px}
 a{color:var(--link)} a:visited{color:var(--seen)}
-:focus-visible{outline:3px solid var(--red);outline-offset:2px}
-h1{font:600 44px/1 var(--f);letter-spacing:-1px;margin:.4em 0 .15em}
-.strip{border:2px solid var(--ink);background:var(--paper);padding:4px 10px;font:16px/1.4 var(--f);min-height:34px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1{font:600 46px/1 var(--f);letter-spacing:4px;text-transform:uppercase;color:var(--paper);text-align:center;margin:.3em 0 .15em;text-shadow:0 2px 0 var(--ink),0 0 14px rgba(255,246,210,.35)}
+h1::after{content:"";display:block;width:120px;height:2px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.strip{border:2px solid var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--ink);padding:4px 10px;font:16px/1.4 var(--f);min-height:34px;text-align:center;letter-spacing:.5px}
 .cur{animation:b 1s steps(1) infinite} @keyframes b{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.cur{animation:none}}
 nav{display:flex;margin:18px 0 0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
-nav button{flex:0 0 auto;font:inherit;background:var(--bg);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
-nav button[aria-selected=true]{background:var(--paper);font-weight:600;position:relative;top:2px}
-section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px}
+nav button{flex:0 0 auto;font:inherit;text-transform:lowercase;background:var(--bg-deep);color:var(--paper);border:2px solid var(--ink);border-bottom:0;padding:4px 18px;cursor:pointer;margin-right:-2px}
+nav button[aria-selected=true]{background:var(--paper);color:var(--ink);font-weight:600;position:relative;top:2px}
+section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px;box-shadow:0 0 0 4px var(--paper),0 0 0 6px var(--ink)}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--ink)}
 .row:last-child{border-bottom:0}
-.play{width:44px;height:44px;font:18px var(--f);background:var(--bg);border:2px outset #888;cursor:pointer}
-.play[aria-pressed=true]{border-style:inset;background:var(--red);color:#fff}
+.play{width:44px;height:44px;font:18px var(--f);background:var(--bg);color:var(--paper);border:2px solid var(--ink);border-radius:50%;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.play[aria-pressed=true]{background:var(--gold);color:var(--ink);box-shadow:inset 2px 2px 0 var(--ink)}
 .t{font-weight:600} .m{font:15px var(--f);opacity:.75}
 .bar{grid-column:1/-1;height:10px;border:1px solid var(--ink);background:#fff;cursor:pointer}
-.bar i{display:block;height:100%;width:0;background:var(--ink)}
-.note{font-size:15px;border:1px solid var(--ink);padding:8px 10px;margin-top:14px}
-footer{margin-top:14px;font:15px var(--f);display:flex;justify-content:space-between;gap:10px}
+.bar i{display:block;height:100%;width:0;background:var(--bg)}
+.note{font-size:15px;border:1px solid var(--ink);padding:8px 10px;margin-top:14px;background:rgba(13,19,51,.05)}
+footer{margin-top:14px;font:15px var(--f);display:flex;justify-content:space-between;gap:10px;color:var(--paper)}
 #visits{touch-action:manipulation;user-select:none}
-#eye{background:none;border:0;font-size:18px;cursor:pointer;color:var(--ink)}
-#room{display:none;margin-top:10px;border:2px solid var(--red);background:var(--paper);color:var(--red);padding:10px;font:16px var(--f)}
+#eye{background:none;border:0;font-size:18px;cursor:pointer;color:var(--paper)}
+#room{display:none;margin-top:10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:10px;font:16px var(--f);box-shadow:4px 4px 0 var(--gold)}
 #room.on{display:block}
+
+/* overrides for the elements votes.js builds, so they match the theme */
+body .post{background:#fbf8ea;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+body .vote button{background:var(--paper);color:var(--ink);border:1px solid var(--ink)}
+body .vote button.on{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+body .cbox{background:#fbf8ea;border-color:var(--ink)}
+body .cbox button,body .join button,body #adm button{background:var(--bg);color:var(--paper);border:2px solid var(--ink);cursor:pointer}
+body .cbox input,body .cbox textarea,body .join input,body #adm input,body #adm textarea,body #adm select{background:#fff;border:1px solid var(--ink);color:var(--ink)}
+body #adm{background:var(--paper);border:2px solid var(--ink)}
+body .sortbar button{color:var(--link)}
+body .sortbar button[aria-pressed=true]{color:var(--ink)}
+body .cm{color:var(--link)}
 </style>
 </head>
 <body>
