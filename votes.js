@@ -1,5 +1,5 @@
-/* votes.js - likes/dislikes, owner-only play and download stats, recent/a-z sorting,
-   approved-only comments, a blog with images, and an admin track manager.
+/* votes.js - likes/dislikes, owner-only stats, recent/a-z sorting, approved-only comments,
+   a blog with images, an admin track manager, and an email signup page with per-list choices.
    Owner panel: type "ledger" on a computer, or tap the "Jayare" title 5 times on a phone. */
 (async () => {
 const CFG = {
@@ -13,6 +13,8 @@ const CFG = {
 const ADMIN_UID = "hASu4ZEGlEezXCfgVRnWEu1rmDp2";
 const V = "https://www.gstatic.com/firebasejs/10.12.2/";
 const TAB_OK = ["beats","loops","kits"];
+const LISTS = ["beats","loops","kits","posts"];
+const LIST_LABEL = { beats:"new beats", loops:"new loops", kits:"new kits", posts:"blog posts" };
 
 /* dates for the original tracks, for "recent" sorting. key = tab:track name, value = YYYY-MM-DD.
    Tracks added through the admin panel get their date automatically. */
@@ -91,6 +93,10 @@ h1{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .sortbar{font-size:15px;margin:0 0 8px}
 .sortbar button{font:inherit;background:none;border:0;padding:0 6px;cursor:pointer;color:var(--link);text-decoration:underline}
 .sortbar button[aria-pressed=true]{color:var(--ink);text-decoration:none;font-weight:600}
+.joinlink{display:inline-block;margin:0 0 10px;font-size:15px}
+.join label{display:block;margin:4px 0}
+.join input[type=email]{display:block;width:100%;font:15px var(--f);margin:8px 0;border:1px solid var(--ink);padding:5px}
+.join button{font:15px var(--f);padding:4px 12px;margin:6px 6px 6px 0;cursor:pointer}
 .post{border:2px solid var(--ink);background:#fff;padding:10px;margin-bottom:12px}
 .ptext{white-space:pre-wrap;margin:6px 0 8px}
 .pimg{max-width:100%;height:auto;display:block;margin:6px 0}
@@ -209,6 +215,62 @@ window.row = function (item, tab) {
   return r;
 };
 
+/* ---------- link to the signup page, shown at the top of each list ---------- */
+function joinLink() {
+  const a = el("a", { href: "#join", textContent: "join the email list", className: "joinlink" });
+  a.onclick = e => { e.preventDefault(); window.show("join"); };
+  return a;
+}
+
+/* ---------- email signup page (#join) ---------- */
+function joinForm() {
+  const picks = LISTS.map(name => {
+    const c = el("input", { type: "checkbox" });
+    c.id = "join-" + name;
+    return { name, input: c, label: el("label", { htmlFor: c.id }, [c, " " + LIST_LABEL[name]]) };
+  });
+  const em = el("input", { type: "email", placeholder: "your email", maxLength: 200 });
+  const consent = el("input", { type: "checkbox" });
+  consent.id = "join-consent";
+  const go = el("button", { textContent: "subscribe" }), msg = el("small");
+  const share = el("button", { textContent: "copy signup link" });
+
+  share.onclick = async () => {
+    const url = location.origin + location.pathname + "#join";
+    try { await navigator.clipboard.writeText(url); share.textContent = "copied"; }
+    catch (e) { prompt("copy this link:", url); }
+    setTimeout(() => share.textContent = "copy signup link", 2000);
+  };
+
+  go.onclick = async () => {
+    const lists = picks.filter(p => p.input.checked).map(p => p.name);
+    const addr = em.value.trim().toLowerCase();
+    if (!lists.length) { msg.textContent = " pick at least one list."; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(addr)) { msg.textContent = " enter a valid email."; return; }
+    if (!consent.checked) { msg.textContent = " tick the box to subscribe."; return; }
+    go.disabled = true;
+    try {
+      await FS.addDoc(FS.collection(db, "subscribers"), { email: addr, lists, consent: true, t: FS.serverTimestamp() });
+      em.value = ""; consent.checked = false; picks.forEach(p => p.input.checked = false);
+      msg.textContent = " you're on the list. thanks.";
+    } catch (e) {
+      msg.textContent = " couldn't subscribe. try again later.";
+      console.warn(e);
+    }
+    go.disabled = false;
+  };
+
+  return el("div", { className: "join" }, [
+    el("h3", { textContent: "join the email list" }),
+    el("p", { textContent: "pick what you want to hear about:" }),
+    ...picks.map(p => p.label),
+    em,
+    el("label", { htmlFor: "join-consent" }, [consent, " send me emails for the lists i picked. i can unsubscribe any time."]),
+    go, msg,
+    el("p", {}, [share])
+  ]);
+}
+
 /* ---------- blog (everyone reads, only you post) ---------- */
 async function renderPosts(v) {
   const box = el("div");
@@ -282,6 +344,33 @@ async function loadTrackList(box) {
     box.append(el("p", {}, [el("b", { textContent: t.folder + ": " }), (t.title || "") + (t.bpm ? " (" + t.bpm + " bpm)" : "") + " ", del]));
   });
 }
+/* one button per list. Shows each address once, one per line, ready to paste into a Google Sheet. */
+function listsPanel() {
+  const wrap = el("div"), out = el("div");
+  LISTS.forEach(name => {
+    const b = el("button", { textContent: "show " + name + " list" });
+    b.onclick = async () => {
+      out.replaceChildren(el("p", { textContent: "loading..." }));
+      const emails = new Set();
+      try {
+        (await FS.getDocs(FS.query(FS.collection(db, "subscribers"), FS.where("lists", "array-contains", name))))
+          .forEach(d => emails.add(d.data().email));
+      } catch (e) {
+        out.replaceChildren(el("p", { textContent: "couldn't load. check the console." }));
+        console.warn(e);
+        return;
+      }
+      out.replaceChildren(
+        el("p", { textContent: emails.size + " " + name + " subscribers" }),
+        el("textarea", { rows: 6, readOnly: true, value: [...emails].join("\n") })
+      );
+    };
+    wrap.append(b);
+  });
+  wrap.append(out);
+  return wrap;
+}
+
 async function renderAdmin() {
   let p = document.getElementById("adm");
   if (!p) { p = el("div", { id: "adm" }); document.querySelector("main").append(p); }
@@ -342,6 +431,7 @@ async function renderAdmin() {
     folderIn, fileIn, addTrack, tm, trackBox,
     el("h3", { textContent: "stats" }), refresh, statsBox,
     el("h3", { textContent: "new post" }), ta, img, post, pm,
+    el("h3", { textContent: "email lists" }), listsPanel(),
     el("h3", { textContent: "comments waiting" }), pen, penBox);
   loadStats(statsBox);
   loadTrackList(trackBox);
@@ -372,10 +462,17 @@ document.querySelector("h1").addEventListener("click", () => {
 window.show = function (tab) {
   origShow(tab);
   const v = document.getElementById("view");
+
+  if (tab === "join") {
+    v.replaceChildren(joinForm());
+    v.append(el("div", { className: "note", textContent: ABOUT.license }));
+    return;
+  }
   if (tab === "posts") {
     v.replaceChildren();
     renderPosts(v);
     v.append(el("div", { className: "note", textContent: ABOUT.license }));
+    v.prepend(joinLink());
     return;
   }
   if (!TAB_OK.includes(tab)) return;
@@ -395,6 +492,7 @@ window.show = function (tab) {
     b.onclick = () => { sortMode = m; window.show(tab); }; bar.append(b);
   });
   v.prepend(bar);
+  v.prepend(joinLink());
   const rows = [...v.querySelectorAll(":scope > .row")], idx = new Map(rows.map((r, i) => [r, i]));
   rows.sort((a, b) => sortMode === "a-z"
     ? a.querySelector(".t").textContent.localeCompare(b.querySelector(".t").textContent, undefined, { sensitivity: "base" })
