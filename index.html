@@ -30,8 +30,7 @@ body{margin:0;color:var(--ink);font:18px/1.45 var(--f);background-color:var(--bg
 main{max-width:720px;margin:0 auto;padding:14px}
 a{color:var(--link)} a:visited{color:var(--seen)}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-h1{font:600 46px/1 var(--f);letter-spacing:4px;text-transform:uppercase;color:var(--paper);text-align:center;margin:.3em 0 .15em;text-shadow:0 2px 0 var(--ink),0 0 14px rgba(255,246,210,.35)}
-h1::after{content:"";display:block;width:120px;height:2px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+h1{font:600 44px/1 var(--f);letter-spacing:-1px;color:var(--paper);margin:.4em 0 .15em}h1::after{content:"";display:block;width:120px;height:2px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .strip{border:2px solid var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--ink);padding:4px 10px;font:16px/1.4 var(--f);min-height:34px;text-align:center;letter-spacing:.5px}
 .cur{animation:b 1s steps(1) infinite} @keyframes b{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.cur{animation:none}}
@@ -42,8 +41,8 @@ nav button[aria-selected=true]{background:var(--paper);color:var(--ink);font-wei
 section{border:2px solid var(--ink);background:var(--paper);padding:14px;min-height:240px;box-shadow:0 0 0 4px var(--paper),0 0 0 6px var(--ink)}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--ink)}
 .row:last-child{border-bottom:0}
-.play{width:44px;height:44px;font:18px var(--f);background:var(--bg);color:var(--paper);border:2px solid var(--ink);border-radius:50%;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
-.play[aria-pressed=true]{background:var(--gold);color:var(--ink);box-shadow:inset 2px 2px 0 var(--ink)}
+.play{width:44px;height:44px;font:18px var(--f);background:var(--paper);color:var(--ink);border:2px outset #888;cursor:pointer}
+.play[aria-pressed=true]{border-style:inset;background:var(--gold);color:var(--ink)}
 .t{font-weight:600} .m{font:15px var(--f);opacity:.75}
 .bar{grid-column:1/-1;height:10px;border:1px solid var(--ink);background:#fff;cursor:pointer}
 .bar i{display:block;height:100%;width:0;background:var(--bg)}
