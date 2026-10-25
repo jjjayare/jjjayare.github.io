@@ -1,5 +1,5 @@
 /* votes.js - likes/dislikes, owner-only stats, recent/a-z sorting, approved-only comments,
-   a blog with images, an admin track manager, and an email signup page with per-list choices.
+   a blog with images and comments on each post, an admin track manager, and an email signup page with per-list choices.
    Owner panel: type "ledger" on a computer, or tap the "Jayare" title 5 times on a phone. */
 (async () => {
 const CFG = {
@@ -286,11 +286,16 @@ async function renderPosts(v) {
   if (!posts.length) box.append(el("p", { textContent: "nothing posted yet." }));
   posts.forEach(p => {
     const when = p.t ? new Date(p.t.seconds * 1000).toLocaleDateString() : "";
+    const pkey = "post_" + p.id;
+    const cm = el("button", { className: "cm", textContent: "comments" }), panel = el("div", { className: "cbox" });
+    panel.hidden = true; cm.style.marginTop = "8px"; panel.style.marginTop = "6px";
+    cm.onclick = () => { panel.hidden = !panel.hidden; if (!panel.hidden && !panel.dataset.l) { panel.dataset.l = 1; loadComments(pkey, panel); } };
     box.append(el("div", { className: "post" }, [
       el("div", { className: "m", textContent: when }),
       el("p", { className: "ptext", textContent: p.text }),
       p.image ? el("img", { className: "pimg", src: p.image.startsWith("http") ? p.image : "posts/" + encodeURIComponent(p.image) }) : "",
-      voteBox("post_" + p.id, p.text.slice(0, 40))
+      voteBox("post_" + p.id, p.text.slice(0, 40)),
+      cm, panel
     ]));
   });
 }
